@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  php:
+    container_name: sorted-linked-list-php
+    build:
+      context: ./php
+    volumes:
+      - ./app:/var/www/sorted-linked-list
+    networks:
+      - sorted-linked-list
+
+  nginx:
+    container_name: sorted-linked-list-nginx
+    image: nginx:stable-alpine
+    environment:
+      VIRTUAL_HOST: sorted-linked-list.local
+    ports:
+      - '80:80'
+      - '443:443'
+    volumes:
+      - ./app:/var/www/sorted-linked-list
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - php
+    networks:
+      - sorted-linked-list
+
+###> symfony/mailer ###
+  mailer:
+    image: schickling/mailcatcher
+    ports: [1025, 1080]
+    depends_on:
+      - php
+      - nginx
+    networks:
+      - sorted-linked-list
+###< symfony/mailer ###
+
+networks:
+  sorted-linked-list:
+    driver: bridge
+
