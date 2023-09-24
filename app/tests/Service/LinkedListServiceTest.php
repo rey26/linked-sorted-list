@@ -73,4 +73,25 @@ class LinkedListServiceTest extends KernelTestCase
         $this->assertNull($linkedListService->getFirstNode());
         $this->assertNull($linkedListService->getLastNode());
     }
+
+    public function testFindingNodeByValue(): void
+    {
+        self::bootKernel();
+        $container = static::getContainer();
+
+        /** @var LinkedListService */
+        $linkedListService = $container->get(LinkedListService::class);
+
+        $node5 = NodeFactory::createWithIntegerValue(5);
+        $node3 = NodeFactory::createWithIntegerValue(3);
+        $node1 = NodeFactory::createWithIntegerValue(1);
+
+        $linkedListService->setLinkedList(new LinkedList());
+        $linkedListService->addNode($node3);
+        $linkedListService->addNode($node1);
+        $linkedListService->addNode($node5);
+
+        $this->assertNull($linkedListService->findNodeByValue(2));
+        $this->assertEquals($node3, $linkedListService->findNodeByValue(3));
+    }
 }

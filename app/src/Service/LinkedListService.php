@@ -25,6 +25,7 @@ class LinkedListService
     {
         $head = $this->linkedList->getHead();
 
+        // TODO throw an exception
         if ($head === null || $head->getValue() >= $node->getValue()) {
             $node->setNextNode($head);
             $this->linkedList->setHead($node);
@@ -78,5 +79,28 @@ class LinkedListService
         }
 
         return $this;
+    }
+
+    public function findNodeByValue(int $value): ?Node
+    {
+        if ($this->getFirstNode() === null) {
+            return null;
+        }
+        $current = $this->getFirstNode();
+        $foundNode = null;
+
+        while ($current->getNextNode() !== null) {
+            if ($current->getValue() === $value) {
+                $foundNode = $current;
+
+                break;
+            }
+            $current = $current->getNextNode();
+        }
+        if ($current->getValue() === $value) {
+            $foundNode = $current;
+        }
+
+        return $foundNode;
     }
 }
