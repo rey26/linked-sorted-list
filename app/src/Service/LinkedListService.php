@@ -32,8 +32,17 @@ class LinkedListService
         } else {
             $current = $head;
 
-            while ($current->getNextNode() !== null && $current->getNextNode()->getValue() < $node->getValue()) {
-                $current = $current->getNextNode();
+            if ($head->hasIntegerValue()) {
+                while ($current->getNextNode() !== null && $current->getNextNode()->getValue() < $node->getValue()) {
+                    $current = $current->getNextNode();
+                }
+            } else {
+                while (
+                    $current->getNextNode() !== null &&
+                    ($current->getNextNode()->getValue() <=> $node->getValue()) === -1
+                ) {
+                    $current = $current->getNextNode();
+                }
             }
             $node->setNextNode($current->getNextNode());
             $current->setNextNode($node);

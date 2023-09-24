@@ -94,4 +94,22 @@ class LinkedListServiceTest extends KernelTestCase
         $this->assertNull($linkedListService->findNodeByValue(2));
         $this->assertEquals($node3, $linkedListService->findNodeByValue(3));
     }
+
+
+    public function testAddingAndSortedThreeNodesStringValue(): void
+    {
+        self::bootKernel();
+        $container = static::getContainer();
+
+        /** @var LinkedListService */
+        $linkedListService = $container->get(LinkedListService::class);
+
+        $linkedListService->setLinkedList(new LinkedList());
+        $linkedListService->addNode(NodeFactory::createWithStringValue('abc'));
+        $linkedListService->addNode(NodeFactory::createWithStringValue('aab'));
+        $linkedListService->addNode(NodeFactory::createWithStringValue('acd'));
+
+        $this->assertEquals('aab', $linkedListService->getFirstNode()->getValue());
+        $this->assertEquals('acd', $linkedListService->getLastNode()->getValue());
+    }
 }
