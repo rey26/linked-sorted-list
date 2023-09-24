@@ -4,6 +4,7 @@ namespace App\Tests\Service;
 
 use App\Entity\LinkedList;
 use App\Entity\Node;
+use App\Exception\InvalidNodeException;
 use App\Service\LinkedListService;
 use App\Service\NodeFactory;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -74,7 +75,7 @@ class LinkedListServiceTest extends KernelTestCase
         $this->assertNull($linkedListService->getLastNode());
     }
 
-    public function testFindingNodeByValue(): void
+    public function testFindingNodeByIntegerValue(): void
     {
         self::bootKernel();
         $container = static::getContainer();
@@ -95,6 +96,22 @@ class LinkedListServiceTest extends KernelTestCase
         $this->assertEquals($node3, $linkedListService->findNodeByValue(3));
     }
 
+    public function testFindingNodeByStringValue(): void
+    {
+        self::bootKernel();
+        $container = static::getContainer();
+
+        /** @var LinkedListService */
+        $linkedListService = $container->get(LinkedListService::class);
+
+        $linkedListService->setLinkedList(new LinkedList());
+        $linkedListService->addNode(NodeFactory::createWithStringValue('abc'));
+        $linkedListService->addNode(NodeFactory::createWithStringValue('aad'));
+        $linkedListService->addNode(NodeFactory::createWithStringValue('aab'));
+
+        $this->assertNull($linkedListService->findNodeByValue('aba'));
+        $this->assertInstanceOf(Node::class, $linkedListService->findNodeByValue('aad'));
+    }
 
     public function testAddingAndSortedThreeNodesStringValue(): void
     {
@@ -111,5 +128,20 @@ class LinkedListServiceTest extends KernelTestCase
 
         $this->assertEquals('aab', $linkedListService->getFirstNode()->getValue());
         $this->assertEquals('acd', $linkedListService->getLastNode()->getValue());
+    }
+
+    public function testInvalidNodeHandling(): void
+    {
+        $this->expectException(InvalidNodeException::class);
+
+        self::bootKernel();
+        $container = static::getContainer();
+
+        /** @var LinkedListService */
+        $linkedListService = $container->get(LinkedListService::class);
+
+        $linkedListService->setLinkedList(new LinkedList());
+        $linkedListService->addNode(NodeFactory::createWithStringValue('abc'));
+        $linkedListService->addNode(NodeFactory::createWithIntegerValue(1));
     }
 }

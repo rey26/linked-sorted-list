@@ -4,6 +4,7 @@ namespace App\Service;
 
 use App\Entity\LinkedList;
 use App\Entity\Node;
+use App\Exception\InvalidNodeException;
 
 class LinkedListService
 {
@@ -25,7 +26,10 @@ class LinkedListService
     {
         $head = $this->linkedList->getHead();
 
-        // TODO throw an exception
+        if ($head && $head->hasIntegerValue() !== $node->hasIntegerValue()) {
+            throw new InvalidNodeException('All nodes in a list should hold either integer or string values');
+        }
+
         if ($head === null || $head->getValue() >= $node->getValue()) {
             $node->setNextNode($head);
             $this->linkedList->setHead($node);
@@ -90,7 +94,7 @@ class LinkedListService
         return $this;
     }
 
-    public function findNodeByValue(int $value): ?Node
+    public function findNodeByValue(string|int $value): ?Node
     {
         if ($this->getFirstNode() === null) {
             return null;
