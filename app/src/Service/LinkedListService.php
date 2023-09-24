@@ -7,9 +7,9 @@ use App\Entity\Node;
 
 class LinkedListService
 {
-    protected ?LinkedList $linkedList;
+    protected ?LinkedList $linkedList = null;
 
-    public function setLinkedList(?LinkedList $linkedList): self
+    public function setLinkedList(LinkedList $linkedList): self
     {
         $this->linkedList = $linkedList;
 
