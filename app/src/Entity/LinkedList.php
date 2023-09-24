@@ -4,7 +4,7 @@ namespace App\Entity;
 
 class LinkedList
 {
-    protected ?Node $head;
+    protected ?Node $head = null;
 
     public function setHead(?Node $head): self
     {
