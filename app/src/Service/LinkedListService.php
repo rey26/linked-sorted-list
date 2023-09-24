@@ -25,10 +25,9 @@ class LinkedListService
     {
         $head = $this->linkedList->getHead();
 
-        if ($head === null) {
+        if ($head === null || $head->getValue() >= $node->getValue()) {
+            $node->setNextNode($head);
             $this->linkedList->setHead($node);
-
-            return $this;
         }
 
         return $this;
