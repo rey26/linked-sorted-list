@@ -10,7 +10,7 @@ class LinkedListService
 {
     protected ?LinkedList $linkedList = null;
 
-    public function setLinkedList(LinkedList $linkedList): self
+    public function setLinkedList(?LinkedList $linkedList = new LinkedList()): self
     {
         $this->linkedList = $linkedList;
 
@@ -41,6 +41,10 @@ class LinkedListService
                     $current = $current->getNextNode();
                 }
             } else {
+                /**
+                 * use spaceship operator to compare string values to be in alphabetic order
+                 * https://www.php.net/manual/en/migration70.new-features.php#migration70.new-features.spaceship-op
+                */
                 while (
                     $current->getNextNode() !== null &&
                     ($current->getNextNode()->getValue() <=> $node->getValue()) === -1
@@ -110,7 +114,8 @@ class LinkedListService
             }
             $current = $current->getNextNode();
         }
-        if ($current->getValue() === $value) {
+
+        if ($foundNode === null && $current->getValue() === $value) {
             $foundNode = $current;
         }
 

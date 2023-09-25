@@ -11,6 +11,34 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 class LinkedListServiceTest extends KernelTestCase
 {
+    public function testDefaultValue(): void
+    {
+        self::bootKernel();
+        $container = static::getContainer();
+
+        /** @var LinkedListService */
+        $linkedListService = $container->get(LinkedListService::class);
+
+        $this->assertNull($linkedListService->getLinkedList());
+    }
+
+    public function testResetLinkedList(): void
+    {
+        self::bootKernel();
+        $container = static::getContainer();
+
+        /** @var LinkedListService */
+        $linkedListService = $container->get(LinkedListService::class);
+
+        $linkedListService->setLinkedList();
+
+        $this->assertInstanceOf(LinkedList::class, $linkedListService->getLinkedList());
+
+        $linkedListService->setLinkedList(null);
+
+        $this->assertNull($linkedListService->getLinkedList());
+    }
+
     public function testAddingNewHead(): void
     {
         self::bootKernel();
@@ -33,7 +61,7 @@ class LinkedListServiceTest extends KernelTestCase
         /** @var LinkedListService */
         $linkedListService = $container->get(LinkedListService::class);
 
-        $linkedListService->setLinkedList(new LinkedList());
+        $linkedListService->setLinkedList();
         $linkedListService->addNode(NodeFactory::createWithIntegerValue(2));
         $linkedListService->addNode(NodeFactory::createWithIntegerValue(3));
         $linkedListService->addNode(NodeFactory::createWithIntegerValue(1));
