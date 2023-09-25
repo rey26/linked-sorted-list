@@ -23,5 +23,9 @@ class LinkedListTest extends TestCase
         $linkedList->setHead($headNode);
 
         $this->assertInstanceOf(Node::class, $linkedList->getHead());
+
+        $linkedList->setHead(null);
+
+        $this->assertNull($linkedList->getHead());
     }
 }
